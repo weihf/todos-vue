@@ -1,0 +1,64 @@
+<!--
+ * @Descripttion: 
+ * @Author: weihongfang
+ * @Date: 2021-02-17 16:50:36
+ * @LastEditTime: 2021-02-19 18:55:42
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todos-vue</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header>
+        <h1>To-Do-List</h1>
+    </header>
+    <section id="app" class="main">
+        <div class="head">
+            <input type="checkbox" class="toggle-all" id="toggle" v-model="toggleAll" />
+            <label for="toggle">toggle all</label>
+            <input placeholder="add your todos" type="text" class="new-todo" @keydown.enter="handleNewTodo"
+                v-model="title" v-focus />
+            <button type="button" class="btn btn-add" :class="{'btn-active':title.trim()}"
+                @click="handleNewTodo">+</button>
+        </div>
+        <template v-if="todos.length">
+            <ul class="todo-list">
+                <li v-for="(item,index) in filterTodos" :class="{completed:item.completed,editing:item===currentItem}">
+                    <div class="view">
+                        <input type="checkbox" class="toggle" :id="'item-'+item.id" v-model="item.completed">
+                        <label class="toggle-completed" :for="'item-'+item.id"></label>
+                        <span class="title" @dblclick="handleDblClickEditTodo(item)">{{item.title}}</span>
+                        <button class="destroy" @click="removeTodo(index)"></button>
+                    </div>
+                    <input type="text" class="btn edit" :value="item.title" v-todo-focus="item===currentItem"
+                        @keydown.enter="handleSaveEditTodo(item,index,$event)"
+                        @blur="handleSaveEditTodo(item,index,$event)" @keydown.esc="handlwCancelEdit">
+                </li>
+            </ul>
+            <div class="btns">
+                <span><strong>{{remainCount}}</strong> item left</span>
+                <ul>
+                    <li><a href="#/" :class="{selected:filterText===''}">All</a></li>
+                    <li><a href="#/active" :class="{selected:filterText==='active'}">Active</a></li>
+                    <li><a href="#/completed" :class="{selected:filterText==='completed'}">Completed</a></li>
+                </ul>
+                <button type="button" v-if="todos.some(item=>item.completed===true)" @click="handleClearCompleted"
+                    class="btn">clear-completed</button>
+            </div>
+        </template>
+    </section>
+    <footer>
+        <a href="/img/todos-vue+requirements.png">README</a>
+    </footer>
+    <script src="js/vue.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
